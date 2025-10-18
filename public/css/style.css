@@ -472,6 +472,15 @@ main {
     box-shadow: 0 0 0 3px var(--success-color);
 }
 
+.timeline-content.uncompleted {
+    background: white;
+    filter: blur(3px);
+    opacity: 0.6;
+    pointer-events: none;
+    /*Preventsinteractionwithblurredcontent*/user-select: none;
+    -webkit-filter: blur(3px);
+}
+
 .timeline-content {
     background: white;
     padding: 15px;

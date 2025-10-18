@@ -1,3 +1,4 @@
+
 // DOM Elements
 const trackingForm = document.getElementById('trackingForm');
 const trackingNumberInput = document.getElementById('trackingNumber');
@@ -81,6 +82,7 @@ function displayResults(order) {
     
     // Set status badge
     const statusBadge = document.getElementById('statusBadge');
+    const timelinebar = document.getElementById('tracking-timeline');
     statusBadge.textContent = order.status;
     statusBadge.className = 'status-badge';
     
@@ -100,14 +102,12 @@ function displayResults(order) {
             statusBadge.style.background = '#fef3c7';
             statusBadge.style.color = '#92400e';
             break;
-         case 'Cancelled':
+        case 'Cancelled':
+            
             statusBadge.style.background = '#ef444489';
             statusBadge.style.color = '#ff0000';
-            break;            node_modules/
-            *.log
-            .env
-            .DS_Store
-            package-lock.json
+            timelinebar.style.display = 'red';
+            break;
         default:
             statusBadge.style.background = '#f1f5f9';
             statusBadge.style.color = '#475569';
@@ -154,6 +154,17 @@ function buildTimeline(history) {
         
         timeline.appendChild(timelineItem);
     });
+    if(timeline.classList.contains("completed") == false){
+        const item = document.createElement('div');
+        item.className = 'timeline-item';
+        item.innerHTML = `
+            <div class="timeline-content uncompleted">
+                <div class="timeline-date">Finish date not yet confirmed</div>
+                <div class="timeline-status">Work has to be done.</div>
+            </div>
+        `;
+        timeline.appendChild(item);
+    }
 }
 
 // Helper Functions
