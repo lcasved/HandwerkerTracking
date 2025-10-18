@@ -129,6 +129,11 @@ app.get('/login', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'login.html'));
 });
 
+app.get('/track', (req, res) => {
+    const trackingNumber = req.query.trackingNumber || '';
+    res.render('track', { prefilledTracking: trackingNumber });
+});
+
 
 
 // Start server
