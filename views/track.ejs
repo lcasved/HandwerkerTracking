@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sendung verfolgen - Handwerker Tracking</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔧 Handwerker Auftragsverfolgung</h1>
+            <p class="subtitle">Verfolgen Sie ihren Auftrag</p>
+            <div class="Creds">
+                <a href="/login" class="btn btn-primary">Login</a>
+            </div>
+            <a href="/" class="back-link">← Zurück zur Startseite</a>
+        </header>
+
+        <main>
+            <section class="tracking-form">
+                <h2>Sendung verfolgen</h2>
+                <form id="trackingForm">
+                    <div class="form-group">
+                        <label for="trackingNumber">Sendungsnummer eingeben:</label>
+                        <input 
+                            type="text" 
+                            id="trackingNumber" 
+                            name="trackingNumber" 
+                            placeholder="z.B. ORD001" 
+                            required
+                            autocomplete="off"
+                        >
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="trackBtn">
+                        <span class="btn-text">Sendung suchen</span>
+                        <span class="btn-loader" style="display: none;">
+                            <span class="spinner"></span> Suche...
+                        </span>
+                    </button>
+                </form>
+
+                <div id="errorMessage" class="error-message" style="display: none;"></div>
+            </section>
+
+            <section id="trackingResults" class="tracking-results" style="display: none;">
+                <div class="results-header">
+                    <h3>Tracking-Informationen</h3>
+                    <button id="searchAgain" class="btn btn-secondary">Neue Suche</button>
+                </div>
+
+                <div class="order-info">
+                    <div class="info-card">
+                        <div class="info-row">
+                            <span class="label">Sendungsnummer:</span>
+                            <span class="value" id="orderId"></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Kunde:</span>
+                            <span class="value" id="customerName"></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Produkt:</span>
+                            <span class="value" id="product"></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Bestelldatum:</span>
+                            <span class="value" id="orderDate"></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Voraussichtliche Lieferung:</span>
+                            <span class="value" id="estimatedDelivery"></span>
+                        </div>
+                    </div>
+
+                    <div class="status-card">
+                        <h4>Aktueller Status</h4>
+                        <div class="current-status">
+                            <span class="status-badge" id="statusBadge"></span>
+                            <p class="status-location" id="currentLocation"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tracking-timeline">
+                    <h4>📍 Tracking-Verlauf</h4>
+                    <div id="timeline" class="timeline"></div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Handwerker Sendungsverfolgung. Alle Rechte vorbehalten.</p>
+        </footer>
+    </div>
+
+    <script src="/js/tracking.js"></script>
+</body>
+</html>
