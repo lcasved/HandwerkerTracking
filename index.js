@@ -37,7 +37,7 @@ const orders = {
     status: 'Delivered',
     orderDate: '2025-10-05',
     estimatedDelivery: '2025-10-12',
-    currentLocation: 'Delivered',
+    currentLocation: 'Hamburg',
     trackingHistory: [
       { date: '2025-10-05 10:00', status: 'Order Placed', location: 'Hamburg' },
       { date: '2025-10-06 15:00', status: 'Processing', location: 'Warehouse Hamburg' },

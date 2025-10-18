@@ -82,7 +82,7 @@ function displayResults(order) {
     
     // Set status badge
     const statusBadge = document.getElementById('statusBadge');
-    const timelinebar = document.getElementById('tracking-timeline');
+    const timelinebar = document.querySelector('tracking-timeline');
     statusBadge.textContent = order.status;
     statusBadge.className = 'status-badge';
     
@@ -102,11 +102,9 @@ function displayResults(order) {
             statusBadge.style.background = '#fef3c7';
             statusBadge.style.color = '#92400e';
             break;
-        case 'Cancelled':
-            
+        case 'cancelled':
             statusBadge.style.background = '#ef444489';
             statusBadge.style.color = '#ff0000';
-            timelinebar.style.display = 'red';
             break;
         default:
             statusBadge.style.background = '#f1f5f9';
@@ -117,6 +115,9 @@ function displayResults(order) {
     
     // Build timeline
     buildTimeline(order.trackingHistory);
+
+    displayMap(order.currentLocation);
+    document.getElementById('locationoftheorder').textContent = `📍: ${order.currentLocation}`;
     
     // Show results
     trackingResults.style.display = 'block';
@@ -126,6 +127,27 @@ function displayResults(order) {
         trackingResults.scrollIntoView({ behavior: 'smooth' });
     }, 100);
 }
+
+function displayMap(locationName) {
+    const mapContainer = document.getElementById('mapContainer');
+    const mapFrame = document.getElementById('mapFrame');
+    
+    if (!locationName) {
+        mapContainer.style.display = 'none';
+        return;
+    }
+    
+    // Encode the location name for URL
+    const encodedLocation = encodeURIComponent(locationName);
+    
+    // Create Google Maps embed URL using place name
+    const mapUrl = `https://maps.google.com/maps?q=${encodedLocation}&hl=de&z=12&output=embed`;
+    
+    mapFrame.innerHTML = `<iframe src="${mapUrl}" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
+    mapContainer.style.display = 'block';
+}
+
+
 
 // Build Timeline Function
 function buildTimeline(history) {
@@ -151,7 +173,9 @@ function buildTimeline(history) {
                 <div class="timeline-location">📍 ${event.location}</div>
             </div>
         `;
-        
+        if(event.status.toLowerCase() === 'cancelled'){
+            timelineItem.querySelector('.timeline-content').style.backgroundColor = '#991b1b';
+        }
         timeline.appendChild(timelineItem);
     });
     if(timeline.classList.contains("completed") == false && history[history.length -1].status.toLowerCase() !== 'delivered'){
