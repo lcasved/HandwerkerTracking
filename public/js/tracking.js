@@ -154,7 +154,7 @@ function buildTimeline(history) {
         
         timeline.appendChild(timelineItem);
     });
-    if(timeline.classList.contains("completed") == false){
+    if(timeline.classList.contains("completed") == false && history[history.length -1].status.toLowerCase() !== 'delivered'){
         const item = document.createElement('div');
         item.className = 'timeline-item';
         item.innerHTML = `
