@@ -1,20 +1,15 @@
 {
-  "name": "handwerker-sendungsverfolgung",
+  "name": "handwerker-tracking",
   "version": "1.0.0",
-  "description": "Order tracking system",
+  "description": "Order tracking web application",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js"
   },
-  "keywords": ["tracking", "orders", "express"],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "express": "^4.18.2",
-    "ejs": "^3.1.9"
-  },
-  "devDependencies": {
-    "nodemon": "^3.0.1"
+    "ejs": "^3.1.9",
+    "body-parser": "^1.20.2"
   }
 }
