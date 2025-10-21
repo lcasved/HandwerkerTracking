@@ -16,7 +16,7 @@ trackingForm.addEventListener('submit', async (e) => {
     const trackingNumber = trackingNumberInput.value.trim();
     
     if (!trackingNumber) {
-        showError('Bitte geben Sie eine Sendungsnummer ein.');
+        showError('Bitte geben Sie eine Auftragsnummer ein.');
         return;
     }
     
@@ -86,25 +86,42 @@ function displayResults(order) {
     statusBadge.textContent = order.status;
     statusBadge.className = 'status-badge';
     
-    // Add appropriate color class based on status
+    // Add appropriate color class based on status (Handwerker-specific)
     switch(order.status.toLowerCase()) {
         case 'delivered':
+        case 'abgeschlossen':
+        case 'fertiggestellt':
+        case 'completed':
             statusBadge.style.background = '#d1fae5';
             statusBadge.style.color = '#065f46';
             break;
         case 'in transit':
+        case 'in bearbeitung':
+        case 'in arbeit':
+        case 'wird bearbeitet':
         case 'out for delivery':
             statusBadge.style.background = '#dbeafe';
             statusBadge.style.color = '#1e40af';
             break;
         case 'processing':
+        case 'angenommen':
+        case 'geplant':
+        case 'vorbereitung':
         case 'shipped':
             statusBadge.style.background = '#fef3c7';
             statusBadge.style.color = '#92400e';
             break;
         case 'cancelled':
+        case 'storniert':
+        case 'abgebrochen':
             statusBadge.style.background = '#ef444489';
             statusBadge.style.color = '#ff0000';
+            break;
+        case 'pausiert':
+        case 'wartend':
+        case 'auf material':
+            statusBadge.style.background = '#fef9c3';
+            statusBadge.style.color = '#854d0e';
             break;
         default:
             statusBadge.style.background = '#f1f5f9';
@@ -117,7 +134,7 @@ function displayResults(order) {
     buildTimeline(order.trackingHistory);
 
     displayMap(order.currentLocation);
-    document.getElementById('locationoftheorder').textContent = `📍: ${order.currentLocation}`;
+    document.getElementById('locationoftheorder').textContent = `📍 Aktueller Arbeitsort: ${order.currentLocation}`;
     
     // Show results
     trackingResults.style.display = 'block';
@@ -161,8 +178,9 @@ function buildTimeline(history) {
         const timelineItem = document.createElement('div');
         timelineItem.className = 'timeline-item';
         
-        // Mark completed items
-        if (index < reversedHistory.length - 1 || event.status.toLowerCase() === 'delivered') {
+        // Mark completed items (Handwerker-specific statuses)
+        const completedStatuses = ['delivered', 'abgeschlossen', 'fertiggestellt', 'completed'];
+        if (index < reversedHistory.length - 1 || completedStatuses.includes(event.status.toLowerCase())) {
             timelineItem.classList.add('completed');
         }
         
@@ -173,18 +191,25 @@ function buildTimeline(history) {
                 <div class="timeline-location">📍 ${event.location}</div>
             </div>
         `;
-        if(event.status.toLowerCase() === 'cancelled'){
+        const cancelledStatuses = ['cancelled', 'storniert', 'abgebrochen'];
+        if(cancelledStatuses.includes(event.status.toLowerCase())){
             timelineItem.querySelector('.timeline-content').style.backgroundColor = '#991b1b';
+            timelineItem.querySelector('.timeline-content').style.color = '#ffffff';
         }
         timeline.appendChild(timelineItem);
     });
-    if(timeline.classList.contains("completed") == false && history[history.length -1].status.toLowerCase() !== 'delivered'){
+    
+    // Add pending work indicator for incomplete jobs
+    const completedStatuses = ['delivered', 'abgeschlossen', 'fertiggestellt', 'completed'];
+    const lastStatus = history[history.length - 1]?.status.toLowerCase() || '';
+    
+    if(timeline.classList.contains("completed") == false && !completedStatuses.includes(lastStatus)){
         const item = document.createElement('div');
         item.className = 'timeline-item';
         item.innerHTML = `
             <div class="timeline-content uncompleted">
-                <div class="timeline-date">Finish date not yet confirmed</div>
-                <div class="timeline-status">Work has to be done.</div>
+                <div class="timeline-date">Fertigstellungsdatum noch nicht bestätigt</div>
+                <div class="timeline-status">⏳ Weitere Arbeitsschritte ausstehend</div>
             </div>
         `;
         timeline.appendChild(item);

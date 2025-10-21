@@ -13,64 +13,70 @@ app.use(express.static('public'));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Mock database for orders
+// Mock database for handwerker orders
 const orders = {
-  'ORD001': {
-    id: 'ORD001',
+  'AUFTRAG001': {
+    id: 'Auftrag001',
     customerName: 'Max Mustermann',
-    product: 'Bad',
-    status: 'In Transit',
+    product: 'Badsanierung',
+    status: 'In Bearbeitung',
     orderDate: '2025-10-10',
-    estimatedDelivery: '2025-10-20',
-    currentLocation: 'Distribution Center Lüneburg',
+    estimatedDelivery: '2025-10-28',
+    currentLocation: 'Lüneburg, Musterstraße 12',
     trackingHistory: [
-      { date: '2025-10-10 09:00', status: 'Order Placed', location: 'Uelzen' },
-      { date: '2025-10-11 14:30', status: 'Processing', location: 'Warehouse Lüneburg' },
-      { date: '2025-10-12 08:15', status: 'Shipped', location: 'Lüneburg Depot' },
-      { date: '2025-10-15 11:00', status: 'In Transit', location: 'Distribution Center Lüneburg' }
+      { date: '2025-10-10 09:00', status: 'Auftrag angenommen', location: 'Büro Uelzen' },
+      { date: '2025-10-11 14:30', status: 'Materialbestellung', location: 'Büro Uelzen' },
+      { date: '2025-10-15 08:00', status: 'Material eingetroffen', location: 'Lager Lüneburg' },
+      { date: '2025-10-16 07:30', status: 'Abbrucharbeiten begonnen', location: 'Lüneburg, Musterstraße 12' },
+      { date: '2025-10-18 08:00', status: 'Rohrleitungen verlegt', location: 'Lüneburg, Musterstraße 12' },
+      { date: '2025-10-20 09:00', status: 'Fliesenarbeiten in Arbeit', location: 'Lüneburg, Musterstraße 12' }
     ]
   },
-  'ORD002': {
-    id: 'ORD002',
+  'AUFTRAG002': {
+    id: 'Auftrag002',
     customerName: 'Anna Schmidt',
-    product: 'Küche',
-    status: 'Delivered',
+    product: 'Kücheneinbau',
+    status: 'Abgeschlossen',
     orderDate: '2025-10-05',
-    estimatedDelivery: '2025-10-12',
-    currentLocation: 'Hamburg',
+    estimatedDelivery: '2025-10-15',
+    currentLocation: 'Hamburg, Elbstraße 45',
     trackingHistory: [
-      { date: '2025-10-05 10:00', status: 'Order Placed', location: 'Hamburg' },
-      { date: '2025-10-06 15:00', status: 'Processing', location: 'Warehouse Hamburg' },
-      { date: '2025-10-07 09:00', status: 'Shipped', location: 'Hamburg Depot' },
-      { date: '2025-10-10 14:00', status: 'Out for Delivery', location: 'Hamburg' },
-      { date: '2025-10-10 16:30', status: 'Delivered', location: 'Customer Address' }
+      { date: '2025-10-05 10:00', status: 'Auftrag angenommen', location: 'Büro Hamburg' },
+      { date: '2025-10-06 15:00', status: 'Küche bestellt', location: 'Büro Hamburg' },
+      { date: '2025-10-10 09:00', status: 'Küche geliefert', location: 'Lager Hamburg' },
+      { date: '2025-10-12 08:00', status: 'Montage begonnen', location: 'Hamburg, Elbstraße 45' },
+      { date: '2025-10-13 10:00', status: 'Elektrik angeschlossen', location: 'Hamburg, Elbstraße 45' },
+      { date: '2025-10-14 16:30', status: 'Arbeiten abgeschlossen', location: 'Hamburg, Elbstraße 45' },
+      { date: '2025-10-15 09:00', status: 'Abnahme erfolgt', location: 'Hamburg, Elbstraße 45' }
     ]
   },
-  'ORD003': {
-    id: 'ORD003',
+  'AUFTRAG003': {
+    id: 'Auftrag003',
     customerName: 'Thomas Weber',
-    product: 'Kellertreppe',
-    status: 'Processing',
+    product: 'Treppenrenovierung',
+    status: 'Angenommen',
     orderDate: '2025-10-16',
-    estimatedDelivery: '2025-10-25',
-    currentLocation: 'Warehouse Uelzen',
+    estimatedDelivery: '2025-10-30',
+    currentLocation: 'Büro Uelzen',
     trackingHistory: [
-      { date: '2025-10-16 13:20', status: 'Order Placed', location: 'Uelzen' },
-      { date: '2025-10-17 08:00', status: 'Processing', location: 'Warehouse Uelzen' }
+      { date: '2025-10-16 13:20', status: 'Auftrag angenommen', location: 'Büro Uelzen' },
+      { date: '2025-10-17 08:00', status: 'Vor-Ort-Besichtigung', location: 'Uelzen, Bahnhofstraße 8' },
+      { date: '2025-10-18 10:00', status: 'Angebot erstellt', location: 'Büro Uelzen' },
+      { date: '2025-10-19 14:00', status: 'Auftrag bestätigt', location: 'Büro Uelzen' }
     ]
   },
-  'ORD004': {
-    id: 'ORD004',
-    customerName: 'Jonas keller',
-    product: 'Fliesen legen',
-    status: 'Cancelled',
-    orderDate: '2025-12-16',
-    estimatedDelivery: '2025-12-25',
-    currentLocation: 'Uelzen',
+  'AUFTRAG004': {
+    id: 'Auftrag004',
+    customerName: 'Jonas Felz',
+    product: 'Fliesenverlegung',
+    status: 'Storniert',
+    orderDate: '2025-09-16',
+    estimatedDelivery: '2025-09-25',
+    currentLocation: 'Büro Uelzen',
     trackingHistory: [
-      { date: '2025-12-16 13:20', status: 'Order Placed', location: 'Uelzen' },
-      { date: '2025-12-17 08:00', status: 'Processing', location: 'Warehouse Uelzen' },
-      { date: '2025-12-18 08:00', status: 'Cancelled', location: 'Warehouse Uelzen' }
+      { date: '2025-09-16 13:20', status: 'Auftrag angenommen', location: 'Büro Uelzen' },
+      { date: '2025-09-17 08:00', status: 'Materialbestellung', location: 'Büro Uelzen' },
+      { date: '2025-09-18 15:30', status: 'Storniert durch Kunde', location: 'Büro Uelzen' }
     ]
   }
 };
@@ -100,7 +106,7 @@ app.post('/api/track', (req, res) => {
     } else {
       res.json({
         success: false,
-        message: 'Tracking number not found. Please check and try again.'
+        message: 'Auftragsnummer nicht gefunden. Bitte überprüfen Sie die Nummer und versuchen Sie es erneut.'
       });
     }
   }, 500);
@@ -119,7 +125,7 @@ app.get('/api/track/:trackingNumber', (req, res) => {
   } else {
     res.json({
       success: false,
-      message: 'Tracking number not found.'
+      message: 'Auftragsnummer nicht gefunden.'
     });
   }
 });
@@ -138,10 +144,11 @@ app.get('/track', (req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`🚀 Server is running on http://localhost:${PORT}`);
-  console.log(`📦 Track your orders at http://localhost:${PORT}/track`);
-  console.log('\nSample tracking numbers:');
-  console.log('  - ORD001 (In Transit)');
-  console.log('  - ORD002 (Delivered)');
-  console.log('  - ORD003 (Processing)');
+  console.log(`🚀 Server läuft auf http://localhost:${PORT}`);
+  console.log(`� Verfolgen Sie Ihre Aufträge unter http://localhost:${PORT}/track`);
+  console.log('\nBeispiel-Auftragsnummern:');
+  console.log('  - AUFTRAG001 (In Bearbeitung - Badsanierung)');
+  console.log('  - AUFTRAG002 (Abgeschlossen - Kücheneinbau)');
+  console.log('  - AUFTRAG003 (Angenommen - Treppenrenovierung)');
+  console.log('  - AUFTRAG004 (Storniert - Fliesenverlegung)');
 });
